@@ -1,0 +1,185 @@
+/* Global Layout */
+.root, .gradient-layer {
+    -fx-background-color: linear-gradient(135deg, #0b1224 0%, #0d1b2d 40%, #101633 100%);
+    -app-theme: night;
+    -accent-color: rgba(124, 246, 255, 0.85);
+    -glow-level: 0.4;
+    -fx-font-family: 'Inter', 'SF Pro Display', 'Segoe UI', system-ui;
+    -fx-text-fill: #ecf2ff;
+}
+
+.content-wrapper {
+    -fx-background-color: transparent;
+}
+
+.glass-scroll {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.gradient-layer > * {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 24, 0.18, 0, 6);
+}
+
+/* Hero */
+.hero-card {
+    -fx-padding: 22;
+}
+
+.hero-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #f8fbff;
+}
+
+.hero-subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: rgba(233, 240, 255, 0.76);
+}
+
+.hero-body {
+    -fx-spacing: 10;
+}
+
+.live-badge .label {
+    -fx-text-fill: white;
+}
+
+.badge {
+    -fx-background-color: linear-gradient(120deg, #ff7ab8, #ff5563);
+    -fx-text-fill: white;
+    -fx-padding: 5 10;
+    -fx-background-radius: 999;
+    -fx-font-weight: 700;
+    -fx-font-size: 12px;
+}
+
+/* Cards */
+.glass-card {
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+    -fx-background-radius: 18;
+    -fx-padding: 16;
+    -fx-border-radius: 18;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-border-width: 1.2;
+    -fx-effect: dropshadow(gaussian, rgba(12, 202, 255, 0.14), 28, -0.15, 0, 12);
+}
+
+.metric-title {
+    -fx-text-fill: rgba(237, 246, 255, 0.85);
+    -fx-font-weight: 700;
+}
+
+.metric-value {
+    -fx-text-fill: #f7fbff;
+    -fx-font-weight: 800;
+}
+
+.metric-progress {
+    -fx-background-color: rgba(255,255,255,0.12);
+    -fx-background-radius: 999;
+    -fx-padding: 3;
+    -fx-accent: -accent-color;
+}
+
+.metric-card {
+    -fx-alignment: center-left;
+}
+
+/* Buttons */
+.pill-button {
+    -fx-background-color: linear-gradient(120deg, -accent-color, #6c79ff);
+    -fx-text-fill: #050915;
+    -fx-font-weight: 800;
+    -fx-background-radius: 999;
+    -fx-padding: 10 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 16, 0.32, 0, 8);
+}
+
+.ghost-button {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(255, 255, 255, 0.5);
+    -fx-border-radius: 999;
+    -fx-text-fill: #cdd9ff;
+    -fx-padding: 10 16;
+}
+
+.toggle-button {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: #dfe8ff;
+    -fx-background-radius: 12;
+    -fx-padding: 8 12;
+}
+
+.accent-picker .color-picker-label {
+    -fx-text-fill: white;
+}
+
+/* Live area */
+.section-title {
+    -fx-text-fill: #f4f8ff;
+    -fx-font-weight: 800;
+    -fx-font-size: 18px;
+}
+
+.muted {
+    -fx-fill: rgba(222, 230, 255, 0.7);
+    -fx-text-fill: rgba(222, 230, 255, 0.7);
+    -fx-font-size: 13px;
+}
+
+.neon-chart {
+    -fx-background-color: transparent;
+}
+
+.neon-chart .chart-plot-background {
+    -fx-background-color: rgba(255,255,255,0.05);
+    -fx-background-radius: 12;
+}
+
+.neon-chart .default-color0.chart-series-line {
+    -fx-stroke: linear-gradient(120deg, -accent-color, #a88bff);
+    -fx-stroke-width: 3px;
+}
+
+.neon-chart .default-color0.chart-line-symbol {
+    -fx-background-color: -accent-color, #19233c;
+    -fx-background-radius: 50%;
+    -fx-padding: 6px;
+    -fx-effect: dropshadow(gaussian, rgba(124,246,255,0.5), 16, 0.4, 0, 0);
+}
+
+.live-wrapper {
+    -fx-background-color: transparent;
+}
+
+.interaction-panel .list-view {
+    -fx-background-color: rgba(255,255,255,0.05);
+    -fx-control-inner-background: transparent;
+    -fx-border-color: transparent;
+    -fx-cell-hover-color: rgba(255,255,255,0.08);
+}
+
+.control-panel .slider .track {
+    -fx-background-color: rgba(255,255,255,0.18);
+    -fx-background-radius: 999;
+}
+
+.control-panel .slider .thumb {
+    -fx-background-color: -accent-color;
+    -fx-effect: dropshadow(gaussian, rgba(92, 246, 255, 0.45), 14, 0.5, 0, 4);
+}
+
+.speed-slider .thumb {
+    -fx-background-color: #ffe27a;
+}
+
+.speed-slider .track {
+    -fx-background-color: rgba(255, 226, 122, 0.28);
+}
+
+/* Responsive tweak */
+.root {
+    -fx-padding: 0;
+}
