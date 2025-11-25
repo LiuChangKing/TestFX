@@ -37,20 +37,6 @@
         </repository>
     </repositories>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>panteleyev</id>
-            <name>Panteleyev Maven Repository</name>
-            <url>https://panteleyev.org/maven</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
     <dependencies>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -187,9 +173,9 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.panteleyev</groupId>
+                <groupId>com.github.akman</groupId>
                 <artifactId>jpackage-maven-plugin</artifactId>
-                <version>1.9.1</version>
+                <version>0.1.5</version>
                 <executions>
                     <execution>
                         <id>jpackage-image</id>
