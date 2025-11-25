@@ -12,6 +12,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.10.2</junit.version>
+        <app.name>${project.name}</app.name>
+        <app.vendor>TestFX Demo</app.vendor>
+        <jlink.imageName>app</jlink.imageName>
+        <jpackage.type>app-image</jpackage.type>
     </properties>
 
     <repositories>
@@ -143,11 +147,52 @@
                         <configuration>
                             <mainClass>com.example.testfx/com.example.testfx.HelloApplication</mainClass>
                             <launcher>app</launcher>
-                            <jlinkZipName>app</jlinkZipName>
-                            <jlinkImageName>app</jlinkImageName>
+                            <jlinkZipName>${jlink.imageName}</jlinkZipName>
+                            <jlinkImageName>${jlink.imageName}</jlinkImageName>
                             <noManPages>true</noManPages>
                             <stripDebug>true</stripDebug>
                             <noHeaderFiles>true</noHeaderFiles>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>jlink-image</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>jlink</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>com.example.testfx/com.example.testfx.HelloApplication</mainClass>
+                            <launcher>${jlink.imageName}</launcher>
+                            <jlinkZipName>${jlink.imageName}</jlinkZipName>
+                            <jlinkImageName>${jlink.imageName}</jlinkImageName>
+                            <noManPages>true</noManPages>
+                            <stripDebug>true</stripDebug>
+                            <noHeaderFiles>true</noHeaderFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.panteleyev</groupId>
+                <artifactId>jpackage-maven-plugin</artifactId>
+                <version>1.9.1</version>
+                <executions>
+                    <execution>
+                        <id>jpackage-image</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jpackage</goal>
+                        </goals>
+                        <configuration>
+                            <name>${app.name}</name>
+                            <appVersion>${project.version}</appVersion>
+                            <type>${jpackage.type}</type>
+                            <vendor>${app.vendor}</vendor>
+                            <dest>${project.build.directory}/installer</dest>
+                            <runtimeImage>${project.build.directory}/${jlink.imageName}</runtimeImage>
+                            <input>${project.build.directory}</input>
+                            <mainJar>${project.build.finalName}.jar</mainJar>
+                            <mainClass>com.example.testfx/com.example.testfx.HelloApplication</mainClass>
                         </configuration>
                     </execution>
                 </executions>
