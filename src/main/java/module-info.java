@@ -8,11 +8,6 @@ module com.example.testfx {
     requires net.synedra.validatorfx;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
-    requires eu.hansolo.fx.countries;
-    requires eu.hansolo.fx.heatmap;
-    requires eu.hansolo.toolboxfx;
-    requires eu.hansolo.toolbox;
-    requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
 
     opens com.example.testfx to javafx.fxml;
