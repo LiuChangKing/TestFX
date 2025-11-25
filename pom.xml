@@ -145,7 +145,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.example.testfx/com.example.testfx.HelloApplication</mainClass>
+                            <mainClass>com.example.testfx.HelloApplication</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>${jlink.imageName}</jlinkZipName>
                             <jlinkImageName>${jlink.imageName}</jlinkImageName>
@@ -161,7 +161,7 @@
                             <goal>jlink</goal>
                         </goals>
                         <configuration>
-                            <mainClass>com.example.testfx/com.example.testfx.HelloApplication</mainClass>
+                            <mainClass>com.example.testfx.HelloApplication</mainClass>
                             <launcher>${jlink.imageName}</launcher>
                             <jlinkZipName>${jlink.imageName}</jlinkZipName>
                             <jlinkImageName>${jlink.imageName}</jlinkImageName>
@@ -192,7 +192,7 @@
                             <runtimeImage>${project.build.directory}/${jlink.imageName}</runtimeImage>
                             <input>${project.build.directory}</input>
                             <mainJar>${project.build.finalName}.jar</mainJar>
-                            <mainClass>com.example.testfx/com.example.testfx.HelloApplication</mainClass>
+                            <mainClass>com.example.testfx.HelloApplication</mainClass>
                         </configuration>
                     </execution>
                 </executions>
