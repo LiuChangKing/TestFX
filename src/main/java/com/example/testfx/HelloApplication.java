@@ -2,15 +2,13 @@ package com.example.testfx;
 
 import javafx.animation.*;
 import javafx.application.Application;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -18,297 +16,215 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class HelloApplication extends Application {
-    private final List<MetricCard> metricCards = new ArrayList<>();
-    private final Random random = new Random();
-    private Timeline liveTimeline;
-    private int timeStep = 0;
-    private DoubleProperty glowLevel = new SimpleDoubleProperty(0.4);
-    private XYChart.Series<Number, Number> liveSeries;
 
     @Override
     public void start(Stage stage) {
-        StackPane gradientLayer = new StackPane();
-        gradientLayer.getStyleClass().add("gradient-layer");
+        StackPane root = new StackPane();
+        root.getStyleClass().add("app-root");
 
-        VBox content = new VBox(18);
-        content.setPadding(new Insets(26, 32, 40, 32));
-        content.getStyleClass().add("content-wrapper");
+        addBackdropGlow(root);
 
-        content.getChildren().addAll(
-                createHeroSection(),
-                createMetricRow(),
-                createLiveExperienceSection()
-        );
+        HBox layout = new HBox(22);
+        layout.getStyleClass().add("layout");
+        layout.setPadding(new Insets(26, 32, 26, 32));
 
-        ScrollPane scrollPane = new ScrollPane(content);
-        scrollPane.getStyleClass().add("glass-scroll");
-        scrollPane.setFitToWidth(true);
+        VBox sidebar = buildSidebar();
+        VBox mainArea = buildMainArea();
 
-        gradientLayer.getChildren().add(scrollPane);
+        layout.getChildren().addAll(sidebar, mainArea);
+        HBox.setHgrow(mainArea, Priority.ALWAYS);
 
-        Scene scene = new Scene(gradientLayer, 1280, 840);
+        root.getChildren().add(layout);
+
+        Scene scene = new Scene(root, 1280, 820);
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
-        stage.setTitle("Neon Playground | JavaFX Studio");
+        stage.setTitle("Dream Minecraft Launcher | JavaFX Demo");
         stage.setScene(scene);
         stage.show();
-
-        playBackdropGlow(gradientLayer);
-        startLiveNumbers();
     }
 
-    private VBox createHeroSection() {
-        Label title = new Label("Neon Playground");
-        title.getStyleClass().add("hero-title");
+    private VBox buildSidebar() {
+        VBox sidebar = new VBox(24);
+        sidebar.getStyleClass().add("sidebar");
 
-        Label subtitle = new Label("即时预览主题、动画和实时数据，打造属于你的酷炫体验。");
-        subtitle.getStyleClass().add("hero-subtitle");
+        VBox brand = new VBox(6);
+        Label title = new Label("DREAM");
+        title.getStyleClass().add("brand-title");
+        Label subtitle = new Label("MINECRAFT LAUNCHER");
+        subtitle.getStyleClass().add("brand-subtitle");
+        brand.getChildren().addAll(title, subtitle);
 
-        Button shimmerButton = new Button("激活流光");
-        shimmerButton.getStyleClass().add("pill-button");
-        shimmerButton.setOnAction(e -> triggerHeroPulse(shimmerButton));
+        VBox navList = new VBox(10);
+        ToggleGroup navGroup = new ToggleGroup();
+        navList.getChildren().addAll(
+                createNavItem("Home", "⌂", navGroup, true),
+                createNavItem("News", "📰", navGroup, false),
+                createNavItem("Mods", "🔧", navGroup, false),
+                createNavItem("Settings", "⚙", navGroup, false)
+        );
 
-        Button microInteractionButton = new Button("小交互合集");
-        microInteractionButton.getStyleClass().add("ghost-button");
-        microInteractionButton.setOnAction(e -> showMicroInteractions());
+        VBox filler = new VBox();
+        VBox.setVgrow(filler, Priority.ALWAYS);
 
-        ToggleButton themeToggle = new ToggleButton("夜幕模式");
-        themeToggle.getStyleClass().add("toggle-button");
-        themeToggle.selectedProperty().addListener((obs, oldV, isOn) -> {
-            String theme = isOn ? "night" : "day";
-            themeToggle.getScene().getRoot().setStyle("-app-theme:" + theme + ";");
-        });
-
-        ColorPicker accentPicker = new ColorPicker(Color.web("#7cf6ff"));
-        accentPicker.getStyleClass().add("accent-picker");
-        accentPicker.setOnAction(e -> {
-            Color c = accentPicker.getValue();
-            String color = String.format("rgba(%d,%d,%d,0.85)",
-                    (int) (c.getRed() * 255), (int) (c.getGreen() * 255), (int) (c.getBlue() * 255));
-            accentPicker.getScene().getRoot().setStyle("-accent-color: " + color + ";");
-        });
-
-        HBox actions = new HBox(12, shimmerButton, microInteractionButton, themeToggle, accentPicker);
-        actions.setAlignment(Pos.CENTER_LEFT);
-
-        GlassCard heroCard = new GlassCard(createHeroBody(title, subtitle, actions));
-        heroCard.getStyleClass().add("hero-card");
-        return new VBox(heroCard);
+        sidebar.getChildren().addAll(brand, navList, filler);
+        return sidebar;
     }
 
-    private VBox createHeroBody(Label title, Label subtitle, HBox actions) {
-        VBox heroBody = new VBox(12);
-        heroBody.getStyleClass().add("hero-body");
+    private ToggleButton createNavItem(String text, String icon, ToggleGroup group, boolean selected) {
+        ToggleButton button = new ToggleButton(icon + "   " + text);
+        button.setToggleGroup(group);
+        button.getStyleClass().add("nav-button");
+        button.setMaxWidth(Double.MAX_VALUE);
+        button.setSelected(selected);
+        return button;
+    }
 
-        HBox titleRow = new HBox(title, createBadge());
+    private VBox buildMainArea() {
+        VBox mainArea = new VBox(18);
+        mainArea.getStyleClass().add("main-area");
+
+        GlassCard heroCard = new GlassCard(buildHero());
+        heroCard.getStyleClass().add("hero-panel");
+
+        GlassCard launcherCard = new GlassCard(buildLauncherCard());
+        launcherCard.getStyleClass().add("launcher-panel");
+
+        mainArea.getChildren().addAll(heroCard, launcherCard);
+        return mainArea;
+    }
+
+    private VBox buildHero() {
+        VBox container = new VBox(12);
+        container.getStyleClass().add("hero-section");
+
+        HBox titleRow = new HBox(14);
         titleRow.setAlignment(Pos.CENTER_LEFT);
-        titleRow.setSpacing(12);
 
-        heroBody.getChildren().addAll(titleRow, subtitle, actions);
-        return heroBody;
-    }
+        StackPane icon = new StackPane();
+        icon.setPrefSize(54, 54);
+        icon.getStyleClass().add("cube-icon");
 
-    private Node createBadge() {
-        Label badge = new Label("Live");
-        badge.getStyleClass().add("badge");
+        VBox textCol = new VBox(6);
+        Label title = new Label("Welcome back, Explorer");
+        title.getStyleClass().add("hero-title");
+        Text sub = new Text("Launch the latest Minecraft release, manage mods, and stay in sync with your adventures.");
+        sub.getStyleClass().add("hero-subtitle");
+        textCol.getChildren().addAll(title, sub);
 
-        Circle pulse = new Circle(6, Color.web("#ff6b6b"));
-        ScaleTransition pulseAnim = new ScaleTransition(Duration.seconds(1.6), pulse);
-        pulseAnim.setFromX(1);
-        pulseAnim.setFromY(1);
-        pulseAnim.setToX(1.6);
-        pulseAnim.setToY(1.6);
-        pulseAnim.setAutoReverse(true);
-        pulseAnim.setCycleCount(Animation.INDEFINITE);
-        pulseAnim.play();
+        titleRow.getChildren().addAll(icon, textCol);
 
-        HBox badgeWrapper = new HBox(pulse, badge);
-        badgeWrapper.setSpacing(6);
-        badgeWrapper.setAlignment(Pos.CENTER);
-        badgeWrapper.getStyleClass().add("live-badge");
-        return badgeWrapper;
-    }
+        HBox quickActions = new HBox(10);
+        quickActions.getStyleClass().add("quick-actions");
 
-    private GridPane createMetricRow() {
-        GridPane grid = new GridPane();
-        grid.setHgap(18);
-        grid.setVgap(18);
+        Button resumeButton = new Button("Resume Last World");
+        resumeButton.getStyleClass().add("pill-button");
 
-        MetricCard engagement = new MetricCard("互动率", "⚡", Color.web("#7cf6ff"), 74.2);
-        MetricCard satisfaction = new MetricCard("满意度", "✨", Color.web("#ffe27a"), 89.6);
-        MetricCard conversion = new MetricCard("转化率", "🚀", Color.web("#b08eff"), 61.4);
+        Button cloudButton = new Button("Sync Cloud Saves");
+        cloudButton.getStyleClass().add("ghost-button");
 
-        metricCards.addAll(List.of(engagement, satisfaction, conversion));
+        quickActions.getChildren().addAll(resumeButton, cloudButton);
 
-        grid.add(engagement, 0, 0);
-        grid.add(satisfaction, 1, 0);
-        grid.add(conversion, 2, 0);
-
-        ColumnConstraints col = new ColumnConstraints();
-        col.setPercentWidth(33);
-        grid.getColumnConstraints().addAll(col, col, col);
-
-        return grid;
-    }
-
-    private HBox createLiveExperienceSection() {
-        HBox liveRow = new HBox(18);
-        liveRow.setAlignment(Pos.TOP_CENTER);
-
-        GlassCard liveChart = new GlassCard(buildLiveChart());
-        liveChart.getStyleClass().add("live-card");
-        HBox.setHgrow(liveChart, Priority.ALWAYS);
-
-        VBox interactionColumn = new VBox(14);
-        interactionColumn.getChildren().addAll(
-                createSparkCard(),
-                createControlCenter()
-        );
-        interactionColumn.setPrefWidth(320);
-
-        liveRow.getChildren().addAll(liveChart, interactionColumn);
-        HBox.setHgrow(interactionColumn, Priority.NEVER);
-        return liveRow;
-    }
-
-    private VBox buildLiveChart() {
-        NumberAxis xAxis = new NumberAxis();
-        xAxis.setLabel("时间");
-        NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel("活跃度");
-
-        LineChart<Number, Number> chart = new LineChart<>(xAxis, yAxis);
-        chart.setLegendVisible(false);
-        chart.setAnimated(false);
-        chart.getStyleClass().add("neon-chart");
-
-        XYChart.Series<Number, Number> series = new XYChart.Series<>();
-        liveSeries = series;
-        chart.getData().add(liveSeries);
-
-        Button pause = new Button("暂停");
-        pause.getStyleClass().add("pill-button");
-        pause.setOnAction(e -> toggleLiveFeed(pause));
-
-        Slider speedSlider = new Slider(0.4, 2.0, 1.0);
-        speedSlider.valueProperty().addListener((obs, oldV, newV) -> {
-            if (liveTimeline != null) {
-                liveTimeline.setRate(newV.doubleValue());
-            }
-        });
-        speedSlider.getStyleClass().add("speed-slider");
-
-        HBox controls = new HBox(12, pause, new Label("速度"), speedSlider);
-        controls.setAlignment(Pos.CENTER_LEFT);
-
-        VBox container = new VBox(14,
-                buildChartHeader(),
-                chart,
-                controls
-        );
-        container.getStyleClass().add("live-wrapper");
-        container.setPadding(new Insets(12));
-
-        chart.setUserData(series);
+        container.getChildren().addAll(titleRow, quickActions);
         return container;
     }
 
-    private Node buildChartHeader() {
-        Label title = new Label("实时流线");
-        title.getStyleClass().add("section-title");
-        Text desc = new Text("观察随时间变化的活跃度波形，尝试暂停或加速动画。");
-        desc.getStyleClass().add("muted");
+    private BorderPane buildLauncherCard() {
+        BorderPane card = new BorderPane();
+        card.getStyleClass().add("launcher-card");
+        card.setPadding(new Insets(18));
 
-        VBox vbox = new VBox(title, desc);
-        vbox.setSpacing(6);
-        return vbox;
-    }
+        VBox left = new VBox(14);
+        left.getStyleClass().add("version-column");
 
-    private GlassCard createSparkCard() {
-        Label title = new Label("互动清单");
-        title.getStyleClass().add("section-title");
+        Label sectionTitle = new Label("Latest Release");
+        sectionTitle.getStyleClass().add("section-title");
+        Text sectionDesc = new Text("Choose your version and jump right in. Your settings are automatically applied.");
+        sectionDesc.getStyleClass().add("muted");
 
-        ListView<String> checklist = new ListView<>();
-        checklist.getItems().addAll(
-                "点击卡片查看数值闪烁", "拖动速度滑块调整曲线频率", "切换夜幕模式获得暗色霓虹", "使用取色器自定义高光"
+        ToggleGroup versionGroup = new ToggleGroup();
+        VBox versions = new VBox(8);
+        List<VersionItem> versionItems = List.of(
+                new VersionItem("1.20.4", "Latest Release", true),
+                new VersionItem("1.20.3", "", false),
+                new VersionItem("1.20.2", "", false),
+                new VersionItem("1.20", "", false)
         );
-        checklist.setCellFactory(list -> new ChecklistCell());
-        checklist.setPrefHeight(210);
 
-        VBox container = new VBox(10, title, checklist);
-        container.getStyleClass().add("interaction-panel");
-        return new GlassCard(container);
+        for (VersionItem item : versionItems) {
+            versions.getChildren().add(createVersionOption(item, versionGroup));
+        }
+
+        left.getChildren().addAll(sectionTitle, sectionDesc, versions);
+
+        VBox right = new VBox(16);
+        right.getStyleClass().add("play-column");
+        right.setAlignment(Pos.CENTER);
+
+        StackPane avatar = new StackPane();
+        avatar.getStyleClass().add("avatar");
+        avatar.setPrefSize(110, 110);
+
+        Label playerName = new Label("Steve");
+        playerName.getStyleClass().add("player-name");
+
+        Button playButton = new Button("PLAY");
+        playButton.getStyleClass().add("play-button");
+        playButton.setMaxWidth(Double.MAX_VALUE);
+
+        right.getChildren().addAll(avatar, playerName, playButton);
+
+        card.setCenter(left);
+        card.setRight(right);
+        BorderPane.setMargin(right, new Insets(0, 6, 0, 24));
+        return card;
     }
 
-    private GlassCard createControlCenter() {
-        Label title = new Label("氛围控制");
-        title.getStyleClass().add("section-title");
+    private ToggleButton createVersionOption(VersionItem item, ToggleGroup group) {
+        ToggleButton toggle = new ToggleButton();
+        toggle.setToggleGroup(group);
+        toggle.setSelected(item.selected);
+        toggle.getStyleClass().add("version-item");
+        toggle.setMaxWidth(Double.MAX_VALUE);
 
-        Slider glowSlider = new Slider(0.2, 0.8, glowLevel.get());
-        glowSlider.valueProperty().bindBidirectional(glowLevel);
+        Label versionLabel = new Label(item.version);
+        versionLabel.getStyleClass().add("version-title");
 
-        glowLevel.addListener((obs, oldV, newV) ->
-                glowSlider.getScene().getRoot().setStyle("-glow-level: " + newV.doubleValue() + ";"));
+        Text note = new Text(item.note.isEmpty() ? "" : item.note);
+        note.getStyleClass().add("version-note");
 
-        Label hint = new Label("调节背景雾化 & 光晕强度，营造专属氛围。");
-        hint.getStyleClass().add("muted");
+        VBox textBox = new VBox(2, versionLabel, note);
 
-        VBox container = new VBox(10, title, glowSlider, hint);
-        container.getStyleClass().add("control-panel");
-        return new GlassCard(container);
+        HBox content = new HBox(12, textBox);
+        content.setAlignment(Pos.CENTER_LEFT);
+
+        toggle.setGraphic(content);
+        return toggle;
     }
 
-    private void triggerHeroPulse(Node node) {
-        ScaleTransition scale = new ScaleTransition(Duration.millis(480), node);
-        scale.setToX(1.08);
-        scale.setToY(1.08);
-        scale.setAutoReverse(true);
-        scale.setCycleCount(2);
+    private void addBackdropGlow(StackPane root) {
+        Circle cyan = new Circle(360, Color.web("#4cf0ff", 0.18));
+        cyan.setTranslateX(-320);
+        cyan.setTranslateY(-140);
 
-        FadeTransition fade = new FadeTransition(Duration.millis(480), node);
-        fade.setFromValue(1);
-        fade.setToValue(0.6);
-        fade.setAutoReverse(true);
-        fade.setCycleCount(2);
+        Circle violet = new Circle(320, Color.web("#6f7cff", 0.18));
+        violet.setTranslateX(320);
+        violet.setTranslateY(180);
 
-        ParallelTransition pulse = new ParallelTransition(scale, fade);
-        pulse.play();
-    }
-
-    private void showMicroInteractions() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText("交互提示");
-        alert.setContentText("尝试：\n- 将鼠标悬停在卡片上感受浮动\n- 拖动速度滑块切换节奏\n- 点击激活按钮触发光效动画");
-        alert.show();
-    }
-
-    private void playBackdropGlow(StackPane layer) {
-        Circle glow = new Circle(320, Color.web("#5ef3ff", 0.35));
-        glow.setTranslateX(-260);
-        glow.setTranslateY(-140);
-
-        Circle glow2 = new Circle(260, Color.web("#b388ff", 0.25));
-        glow2.setTranslateX(320);
-        glow2.setTranslateY(120);
-
-        layer.getChildren().add(0, new StackPane(glow, glow2));
+        StackPane layer = new StackPane(cyan, violet);
+        root.getChildren().add(layer);
+        layer.toBack();
 
         Timeline shimmer = new Timeline(
                 new KeyFrame(Duration.ZERO,
-                        new KeyValue(glow.scaleXProperty(), 1),
-                        new KeyValue(glow.scaleYProperty(), 1),
-                        new KeyValue(glow2.scaleXProperty(), 1.05),
-                        new KeyValue(glow2.scaleYProperty(), 1.05)
+                        new KeyValue(cyan.radiusProperty(), 360, Interpolator.EASE_BOTH),
+                        new KeyValue(violet.radiusProperty(), 320, Interpolator.EASE_BOTH)
                 ),
-                new KeyFrame(Duration.seconds(3.8),
-                        new KeyValue(glow.scaleXProperty(), 1.2, Interpolator.EASE_BOTH),
-                        new KeyValue(glow.scaleYProperty(), 1.2, Interpolator.EASE_BOTH),
-                        new KeyValue(glow2.scaleXProperty(), 1.15, Interpolator.EASE_BOTH),
-                        new KeyValue(glow2.scaleYProperty(), 1.15, Interpolator.EASE_BOTH)
+                new KeyFrame(Duration.seconds(4.5),
+                        new KeyValue(cyan.radiusProperty(), 400, Interpolator.EASE_BOTH),
+                        new KeyValue(violet.radiusProperty(), 360, Interpolator.EASE_BOTH)
                 )
         );
         shimmer.setAutoReverse(true);
@@ -316,64 +232,15 @@ public class HelloApplication extends Application {
         shimmer.play();
     }
 
-    private void startLiveNumbers() {
-        liveTimeline = new Timeline(new KeyFrame(Duration.seconds(1.2), e -> updateMetrics()));
-        liveTimeline.setCycleCount(Animation.INDEFINITE);
-        liveTimeline.play();
-    }
+    private static class VersionItem {
+        private final String version;
+        private final String note;
+        private final boolean selected;
 
-    private void toggleLiveFeed(Button pauseButton) {
-        if (liveTimeline == null) {
-            return;
-        }
-        if (liveTimeline.getStatus() == Animation.Status.RUNNING) {
-            liveTimeline.pause();
-            pauseButton.setText("继续");
-        } else {
-            liveTimeline.play();
-            pauseButton.setText("暂停");
-        }
-    }
-
-    private void updateMetrics() {
-        for (MetricCard card : metricCards) {
-            double noise = (random.nextDouble() - 0.5) * 10;
-            double updated = clamp(card.getTargetValue() + noise, 40, 98);
-            card.updateValue(updated);
-        }
-
-        timeStep++;
-        addLivePoint();
-    }
-
-    private void addLivePoint() {
-        if (liveSeries == null) {
-            return;
-        }
-
-        double value = 50 + Math.sin(timeStep / 3.0) * 20 + random.nextDouble() * 8;
-        liveSeries.getData().add(new XYChart.Data<>(timeStep, value));
-        if (liveSeries.getData().size() > 30) {
-            liveSeries.getData().remove(0);
-        }
-    }
-
-    private double clamp(double value, double min, double max) {
-        return Math.max(min, Math.min(max, value));
-    }
-
-    private static class ChecklistCell extends ListCell<String> {
-        private final CheckBox checkBox = new CheckBox();
-
-        @Override
-        protected void updateItem(String item, boolean empty) {
-            super.updateItem(item, empty);
-            if (empty || item == null) {
-                setGraphic(null);
-            } else {
-                checkBox.setText(item);
-                setGraphic(checkBox);
-            }
+        private VersionItem(String version, String note, boolean selected) {
+            this.version = version;
+            this.note = note;
+            this.selected = selected;
         }
     }
 
