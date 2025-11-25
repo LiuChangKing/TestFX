@@ -2,6 +2,7 @@ package com.example.testfx;
 
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
+import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.StackPane;
@@ -14,11 +15,13 @@ public class GlassCard extends StackPane {
     public GlassCard(Node content) {
         getStyleClass().add("glass-card");
         setMaxWidth(Double.MAX_VALUE);
+        setCache(true);
+        setCacheHint(CacheHint.SPEED);
 
         DropShadow shadow = new DropShadow();
-        shadow.setRadius(18);
-        shadow.setSpread(0.15);
-        shadow.setOffsetY(8);
+        shadow.setRadius(14);
+        shadow.setSpread(0.12);
+        shadow.setOffsetY(6);
         shadow.setColor(Color.rgb(0, 0, 0, 0.45));
         setEffect(shadow);
 

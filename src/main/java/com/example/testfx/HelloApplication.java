@@ -13,17 +13,23 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.scene.CacheHint;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.util.List;
 
 public class HelloApplication extends Application {
+    private double dragOffsetX;
+    private double dragOffsetY;
 
     @Override
     public void start(Stage stage) {
         StackPane root = new StackPane();
         root.getStyleClass().add("app-root");
+        root.setCache(true);
+        root.setCacheHint(CacheHint.SPEED);
 
         addBackdropGlow(root);
 
@@ -41,8 +47,10 @@ public class HelloApplication extends Application {
 
         Scene scene = new Scene(root, 1280, 820);
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+        stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle("Dream Minecraft Launcher | JavaFX Demo");
         stage.setScene(scene);
+        enableDrag(stage, root);
         stage.show();
     }
 
@@ -208,12 +216,18 @@ public class HelloApplication extends Application {
         Circle cyan = new Circle(360, Color.web("#4cf0ff", 0.18));
         cyan.setTranslateX(-320);
         cyan.setTranslateY(-140);
+        cyan.setCache(true);
+        cyan.setCacheHint(CacheHint.SPEED);
 
         Circle violet = new Circle(320, Color.web("#6f7cff", 0.18));
         violet.setTranslateX(320);
         violet.setTranslateY(180);
+        violet.setCache(true);
+        violet.setCacheHint(CacheHint.SPEED);
 
         StackPane layer = new StackPane(cyan, violet);
+        layer.setCache(true);
+        layer.setCacheHint(CacheHint.SPEED);
         root.getChildren().add(layer);
         layer.toBack();
 
@@ -222,14 +236,27 @@ public class HelloApplication extends Application {
                         new KeyValue(cyan.radiusProperty(), 360, Interpolator.EASE_BOTH),
                         new KeyValue(violet.radiusProperty(), 320, Interpolator.EASE_BOTH)
                 ),
-                new KeyFrame(Duration.seconds(4.5),
-                        new KeyValue(cyan.radiusProperty(), 400, Interpolator.EASE_BOTH),
-                        new KeyValue(violet.radiusProperty(), 360, Interpolator.EASE_BOTH)
+                new KeyFrame(Duration.seconds(6),
+                        new KeyValue(cyan.radiusProperty(), 390, Interpolator.EASE_BOTH),
+                        new KeyValue(violet.radiusProperty(), 345, Interpolator.EASE_BOTH)
                 )
         );
         shimmer.setAutoReverse(true);
         shimmer.setCycleCount(Animation.INDEFINITE);
+        shimmer.setRate(0.8);
         shimmer.play();
+    }
+
+    private void enableDrag(Stage stage, StackPane root) {
+        root.setOnMousePressed(event -> {
+            dragOffsetX = event.getSceneX();
+            dragOffsetY = event.getSceneY();
+        });
+
+        root.setOnMouseDragged(event -> {
+            stage.setX(event.getScreenX() - dragOffsetX);
+            stage.setY(event.getScreenY() - dragOffsetY);
+        });
     }
 
     private static class VersionItem {
