@@ -1,6 +1,6 @@
 /* Global Layout */
 .app-root {
-    -fx-background-color: linear-gradient(135deg, #061326 0%, #0b1c36 45%, #0f1d3d 100%);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #061326 0%, #0b1c36 45%, #0f1d3d 100%);
     -fx-font-family: 'Inter', 'SF Pro Display', 'Segoe UI', system-ui;
     -fx-text-fill: #e8f0ff;
 }
@@ -46,7 +46,7 @@
 }
 
 .nav-button:selected {
-    -fx-background-color: linear-gradient(120deg, #5ef3ff, #7f8aff);
+    -fx-background-color: linear-gradient(from 0% 100% to 100% 0%, #5ef3ff, #7f8aff);
     -fx-text-fill: #061229;
     -fx-effect: dropshadow(gaussian, rgba(126, 231, 255, 0.35), 16, 0.5, 0, 0);
 }
@@ -71,7 +71,7 @@
 }
 
 .cube-icon {
-    -fx-background-color: linear-gradient(140deg, #4ef2ff 0%, #3dd4f5 40%, #6a7dff 100%);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #4ef2ff 0%, #3dd4f5 40%, #6a7dff 100%);
     -fx-background-radius: 14;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 20, 0.25, 0, 8);
     -fx-shape: "M 0 0 L 1 0 L 1 1 L 0 1 Z";
@@ -95,7 +95,7 @@
 
 /* Buttons */
 .pill-button {
-    -fx-background-color: linear-gradient(120deg, #5ef3ff, #7f8aff);
+    -fx-background-color: linear-gradient(from 0% 100% to 100% 0%, #5ef3ff, #7f8aff);
     -fx-text-fill: #0a1733;
     -fx-font-weight: 800;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 16, 0.32, 0, 8);
@@ -109,7 +109,7 @@
 }
 
 .play-button {
-    -fx-background-color: linear-gradient(120deg, #5ef3ff, #4ade80);
+    -fx-background-color: linear-gradient(from 0% 100% to 100% 0%, #5ef3ff, #4ade80);
     -fx-text-fill: #041126;
     -fx-font-weight: 900;
     -fx-font-size: 16px;
@@ -171,7 +171,7 @@
 
 .avatar {
     -fx-background-radius: 20;
-    -fx-background-color: linear-gradient(145deg, #4ef2ff 0%, #6b7bff 60%, #3bd490 100%);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #4ef2ff 0%, #6b7bff 60%, #3bd490 100%);
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.32), 24, 0.34, 0, 10);
 }
 
