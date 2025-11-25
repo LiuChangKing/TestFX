@@ -15,7 +15,8 @@
         <app.name>${project.name}</app.name>
         <app.vendor>TestFX Demo</app.vendor>
         <jlink.imageName>app</jlink.imageName>
-        <jpackage.type>app-image</jpackage.type>
+        <!-- jpackage-maven-plugin expects enum-style values (e.g., APP_IMAGE) -->
+        <jpackage.type>APP_IMAGE</jpackage.type>
     </properties>
 
     <repositories>
