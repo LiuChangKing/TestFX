@@ -176,14 +176,11 @@
             <plugin>
                 <groupId>com.github.akman</groupId>
                 <artifactId>jpackage-maven-plugin</artifactId>
-                <version>0.1.5</version>
+                <version>0.1.3</version>
                 <executions>
                     <execution>
                         <id>jpackage-image</id>
                         <phase>package</phase>
-                        <goals>
-                            <goal>jpackage</goal>
-                        </goals>
                         <configuration>
                             <name>${app.name}</name>
                             <appVersion>${project.version}</appVersion>
